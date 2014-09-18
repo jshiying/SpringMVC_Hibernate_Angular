@@ -1,0 +1,58 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- scan the controllers -->
+    
+	 <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
+	 <mvc:default-servlet-handler/>
+    <!-- scan the views -->
+    <!-- define the REST content negotiating view resolver -->
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"
+          p:defaultContentType="application/json"
+          p:favorPathExtension="true"
+          p:useJaf="false">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json"/>
+                <entry key="html" value="text/html"/>
+                <entry key="xls" value="application/vnd.ms-excel"/>
+                <entry key="csv" value="text/csv"/>
+            </map>
+        </property>
+    </bean>
+
+    <!-- add a bean name view resolver to support the multiple views results based on bean names -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="1"/>
+
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:viewClass="org.springframework.web.servlet.view.JstlView"
+          p:prefix="/WEB-INF/views/"
+          p:suffix=".jsp"
+          p:order="2"/>
+
+   <!--  define the annotation driven MVC with the content negotiation -->
+   
+
+     
+    <!-- Configure bean to convert JSON to POJO and vice versa -->
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    </bean> 
+     
+  
+   
+   <context:component-scan base-package="org.arjis.humantrafficking.controller"/>
+</beans>
+
+
+
+
+
+
